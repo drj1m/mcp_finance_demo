@@ -6,7 +6,7 @@ An intelligent stock data retrieval system built on the Model Context Protocol (
 
 - 🤖 AI-Powered Query Understanding: Uses Google Gemini to interpret natural language stock queries
 
-- 📊 Dual Data Sources: Primary Yahoo Finance API with CSV fallback for reliability
+- 📊 Dual Data Sources: Primary Yahoo Finance API
 
 - 🔄 Automatic Tool Selection: Intelligent mapping of user queries to appropriate stock tools
 
@@ -34,7 +34,7 @@ The system consists of two main components:
 
 - Provides stock data tools through the MCP protocol
 
-- Implements Yahoo Finance API integration with CSV fallback
+- Implements Yahoo Finance API integration
 
 - Exposes two main tools: get_stock_price and compare_stocks
 
@@ -61,11 +61,6 @@ pip install -r requirements.txt
 ```
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
-4. Update working directory:
-```
-cwd="C:/your/project/path"  # Update this path
-```
-5. Ensure `stocks_data.csv` is present in your working directory. This CSV file serves as a fallback data source when the Yahoo Finance API is unavailable due to network issues, or service outages. The local dataset contains price information for a curated selection of top-performing stocks to provide reliable offline access to essential market data.
 
 ## Usage
 
@@ -73,7 +68,7 @@ cwd="C:/your/project/path"  # Update this path
 
 1. Run the client:
 ```
-python -m stock_agent.mcp_client
+python stock_agent/mcp_client.py
 ```
 
 2. Enter natural language queries:
@@ -113,54 +108,6 @@ Output: AAPL ($150.25 YF) is lower than MSFT ($380.50 YF).
 "top gainers"
 ```
 
-#### Fallback Data:
-
-```
-Input: "Get Tesla stock price"
-Output: The current price of TSLA is $250.87 (from local data)
-```
-
-### File Structure
-
-```
-├── mcp_client.py          # Main client application
-├── mcp_server.py          # MCP server with stock tools
-├── .env                   # Environment variables (API keys)
-├── requirements.txt       # Python dependencies
-├── stocks_data.csv        # Fallback stock data
-└── README.md             # This file
-```
-
-## Available Tools
-
-`get_stock_price`
-
-- Purpose: Retrieve current stock price for a single symbol
-- Parameters:
-```symbol (string): Stock ticker symbol (e.g., "AAPL", "MSFT")```
-
-- Example Usage:
-```
-"What's Apple's stock price?"
-"Get TSLA price"
-"Show me Microsoft stock value"
-```
-
-`compare_stocks`
-
-- Purpose: Compare prices between two stock symbols
-- Parameters:
-```
-symbol1 (string): First stock ticker symbol
-symbol2 (string): Second stock ticker symbol
-```
-- Example Usage:
-```
-"Compare Apple and Google stocks"
-"Which is higher, MSFT or AAPL?"
-"Show me Tesla vs Ford stock prices"
-```
-
 ## Configuration
 
 ### API Keys
@@ -171,28 +118,6 @@ Set your Gemini API key in the .env file:
 GEMINI_API_KEY=your_actual_api_key_here
 ```
 
-### Working Directory
-
-Update the cwd parameter in mcp_client.py:
-
-```
-server_params = StdioServerParameters(
-    command="python",
-    args=["mcp_server.py"],
-    cwd="/path/to/your/project"  # Update this
-)
-```
-
-### CSV Data Format
-
-The fallback CSV file should follow this structure:
-
-```
-symbol,price,last_updated
-AAPL,150.25,2024-01-15
-MSFT,380.50,2024-01-15
-```
-
 ## Data Sources
 
 ### Primary: Yahoo Finance
@@ -201,11 +126,6 @@ MSFT,380.50,2024-01-15
 - Comprehensive market coverage
 - Automatic retry mechanisms
 
-### Fallback: Local CSV
-
-- Offline data access when Yahoo Finance is unavailable
-- Customizable stock universe
-- Fast local lookups
 
 ## Troubleshooting
 
@@ -252,10 +172,3 @@ For detailed debugging, check console output which shows:
 - Tool identification process
 - Data source selection
 - Error details
-
-## Dependencies
-
-- mcp[cli]==1.8.1 - Model Context Protocol framework
-- yfinance==0.2.61 - Yahoo Finance API wrapper
-- google-genai==1.15.0 - Google Gemini AI client
-- python-dotenv==1.1.0 - Environment variable management
